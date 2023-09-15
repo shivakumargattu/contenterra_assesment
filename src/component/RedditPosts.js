@@ -1,11 +1,11 @@
-// src/RedditPosts.js
-import "./index.css"
 
+import "./index.css"
 
 import React, { useState, useEffect } from 'react';
 
 function RedditPosts() {
   const [posts, setPosts] = useState([]);
+  const [isLoding, setIsLoading]=useState()
 
   useEffect(() => {
     fetch('https://www.reddit.com/r/reactjs.json')
@@ -21,19 +21,27 @@ function RedditPosts() {
           id: post.data.id, // Unique identifier for React keys
         }));
         setPosts(redditPosts);
+        setIsLoading(false); 
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        setIsLoading(false); 
       });
   }, []);
 
   return (
-    <div className="">
-      <h1 className="text-center">Reddit Posts</h1>
-      <ul>
+    <div className="bg-dark">
+      <h1 className="text-center text-light pt-4">Reddit Posts</h1>
+      
+
+      {isLoding ? (<div className="d-flex justify-content-center">
+  <div className="spinner-border text-primary" role="status">
+    <span className="visually-hidden">Loading...</span>
+  </div>
+</div>):(<ul>
         {posts.map(post => (
           <div>
-          <div className="card p-2 m-3 alert alert-primary">
+          <div className="card p-2 m-4 shadow alert-light">
           <div className="card-body" key={post.id}>
             <h2>{post.title}</h2>
             <p>{post.selfTextHTML}</p>
@@ -43,7 +51,8 @@ function RedditPosts() {
           </div>
           </div>
         ))}
-      </ul>
+      </ul>) }
+      
     </div>
   );
 }
